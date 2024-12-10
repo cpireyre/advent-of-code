@@ -53,28 +53,42 @@
     (->> matrix
          trailheads
          (map count)
-         (apply +))))
+         (reduce +))))
 
 (pprint (time (part-1 "puzzle-input.txt")))
 
-(defn dfs [matrix size pos seen]
-  (if (= 9 (get-in matrix pos))
-    1
-    (->> (trails matrix size pos)
-         (remove seen)
-         (map #(dfs matrix size % (conj seen pos)))
-         (reduce + 0))))
+
+(defn count-paths [matrix size start]
+  (loop [seen []
+         [h & t] #{start}]
+    (if (nil? h)
+      seen
+      (recur (conj seen h) (into t (trails matrix size h))))))
+
+; (defn dfs [matrix size pos seen]
+;   (if (= 9 (get-in matrix pos))
+;     1
+;     (->> (trails matrix size pos)
+;          (remove seen)
+;          (map #(dfs matrix size % (conj seen pos)))
+;          (reduce +))))
 
 (defn trailheads-v2 [matrix]
-  (let [size (dimensions matrix)]
+  (let [size (dimensions matrix)
+        nine? (fn [v] (= (get-in matrix v) 9))]
     (for [x (range (first size))
           y (range (second size))
           :when (zero? (get-in matrix [x y]))]
-      (dfs matrix size [x y] #{}))))
+      (->> [x y]
+           (count-paths matrix size)
+           (filter nine?)))))
 
 (defn part-2 [file]
-  (let [matrix (parse file)
-        size (dimensions matrix)]
-    (reduce + 0 (trailheads-v2 matrix))))
+  (let [matrix (parse file)]
+    (->> matrix
+         trailheads-v2
+         (map count)
+         (reduce +))))
 
 (pprint (time (part-2 "puzzle-input.txt")))
+(time (parse "puzzle-input.txt"))
