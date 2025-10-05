@@ -12,6 +12,6 @@ def II(xs):
         res -= c == ')'
         if (res == -1): return i + 1
 
-input = open("input").read()
+input = open("input/01.txt").read()
 print(I(input))
 print(II(input))
