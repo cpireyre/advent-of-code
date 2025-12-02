@@ -1,37 +1,28 @@
-# >>> rhs = ys // pow(10, log10(ys) // 2 + 1)
-# >>> rhs
-# 4848.0
-# >>> ys
-# 48484848
-# >>> rhs + rhs * pow(10, log10(ys)//2 + 1)
-# 48484848.0
-# >>> rhs + rhs * pow(10, log10(ys)//2 + 1) == ys
-
 from math import pow, log10
-def valid(n):
-    if not n: return False
-    if int(log10(n)) % 2 == 0: return False
-    rhs = n // pow(10, log10(n)//2 + 1)
-    return rhs + rhs * pow(10, log10(n)//2 + 1) == n
 
-def vvalid(n):
-    xs = str(n)
-    for window_len in range(1, len(xs)):
-        res = []
-        for i in range(1, len(xs)):
-            if i % window_len == 0:
-                res.append(xs[i - window_len: i])
-        total = sum(len(s) for s in res)
-        if len(xs) > total: res.append(xs[total:])
-        if all(x == res[0] for x in res): return True
-    return False
+shift = lambda n,r: n // int(pow(10, r))
+maskoff = lambda n,r: n % int(pow(10, r))
+n_digits = lambda n: int(log10(n)) + 1
+def chunked(n, i):
+    res = []
+    while n:
+        m = maskoff(n, i)
+        if (m and n_digits(m) != i):
+            return None
+        res.append(m)
+        n = shift(n, i)
+    return res
 
-input = open("./input/02-in.txt").read().split(",")
+input = open("./input/02-ex.txt").read().split(",")
 p1 = p2 = 0
 for id_range in input:
     nums = id_range.split("-")
     l, r = int(nums[0]), int(nums[1])
-    for n in range(l, r + 1):
-        p1 += n * valid(n)
-        p2 += n * vvalid(n)
+    for n in range(l, r+1):
+        for i in reversed(range(1, n_digits(n))):
+            xs = chunked(n, i)
+            if not xs: continue
+            if all(x == xs[0] for x in xs):
+                p2 += n
+                break
 print(p1, p2)
