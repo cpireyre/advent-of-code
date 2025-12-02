@@ -1,6 +1,6 @@
-from math import pow, log10
-ilog10   = lambda n:   int(log10(n))
-ipow     = lambda n,i: int(pow(n,i))
+from math import pow, log10, floor
+ilog10   = lambda n:   floor(log10(n))
+ipow     = lambda n,i: floor(pow(n,i))
 n_digits = lambda n:   ilog10(n) + 1
 p1 = p2 = 0
 for ids in open(0).read().split(","):
@@ -8,7 +8,7 @@ for ids in open(0).read().split(","):
     for n in range(int(l), int(r)+1):
         m = pow(10, log10(n)//2 + 1)
         p1 += ((n//m)*(m+1)==n)*n*(ilog10(n)%2)
-        for i in reversed(range(1, n_digits(n))):
+        for i in range(1, n_digits(n)):
             q = n
             while q:
                 m = q % ipow(10, i)
