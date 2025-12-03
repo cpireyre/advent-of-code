@@ -1,12 +1,3 @@
-# >>> rhs = ys // pow(10, log10(ys) // 2 + 1)
-# >>> rhs
-# 4848.0
-# >>> ys
-# 48484848
-# >>> rhs + rhs * pow(10, log10(ys)//2 + 1)
-# 48484848.0
-# >>> rhs + rhs * pow(10, log10(ys)//2 + 1) == ys
-
 from math import pow, log10
 def valid(n):
     if not n: return False
