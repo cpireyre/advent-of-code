@@ -1,8 +1,8 @@
 from utils import extract, mooren
-G = open(0).read().split()
-roll = lambda r,c: G[r][c] == '@'
-p1, p2, P = 0, 0, extract(G, roll)
-adj = lambda u: sum(roll(*v) for v in mooren(*u)&P)
+p1, p2, G = 0, 0, open(0).read().split()
+P = extract(G, lambda r,c: G[r][c]=='@')
+adj = lambda u: sum(G[r][c]=='@'
+            for r,c in mooren(*u) & P)
 while True:
     K = set(u for u in P if adj(u) >= 4)
     if P == K: break
