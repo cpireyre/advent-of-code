@@ -1,21 +1,12 @@
-from itertools import product
-
-grid = open("./input/04-in.txt").read().splitlines()
-R, C = len(grid), len(grid[0])
-
-inside = lambda r,c: 0 <= r < R and 0 <= c < C
-neighbors = lambda r,c: {(r+1,c),(r-1,c),(r,c+1),(r,c-1),
-                          (r+1,c+1),(r-1,c-1),(r+1,c-1),(r-1,c+1)}
-adjacent = lambda u: sum(inside(*v) and v in paper for v in neighbors(*u))
-p1 = p2 = 0
-paper = set()
-for r,c in product(range(R),range(C)):
-    if grid[r][c] == '@': paper.add((r,c))
+G = open(0).read().split()
+p1, p2, R, C = 0, 0, len(G), len(G[0])
+roll = lambda r,c: G[r][c] == '@'
+P = set((r,c) for r in range(R) for c in range(C) if roll(r,c))
+N = lambda r,c:{(r+i,c+j) for i in (-1,0,1) for j in(-1,0,1) if i|j}
+adj = lambda u: len([v for v in N(*u) & P if roll(*v)])
 while True:
-    keep = set(u for u in paper if adjacent(u) >= 4)
-    if not p2: p1 += len(paper) - len(keep)
-    p2 += len(paper) - len(keep)
-    if paper == keep: break
-    paper = keep
-
+    K = set(u for u in P if adj(u) >= 4)
+    p1 += len(P^K)*(not p2);p2+=len(P^K)
+    if P == K: break
+    P = K
 print(p1, p2)
