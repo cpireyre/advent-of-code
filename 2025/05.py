@@ -1,18 +1,13 @@
-input = open("./input/05-in.txt").read().split()
-
-intervals, ingredients = [], set()
-for line in input:
-    if line.isdigit():
-        ingredients.add(int(line))
+xs, I = [], []
+for L in open(0).read().split():
+    if L.isdigit(): I.append(int(L))
     else:
-        l, _, r = line.partition('-')
-        intervals.append([int(l),int(r)])
-intervals.sort()
-I = [intervals[0]]
-for s,e in intervals:
-    if s <= I[-1][1]:
-        I[-1][1] = max(I[-1][1], e)
-    else: I.append([s,e])
-p1 = sum(s<=i<=e for s,e in I for i in ingredients)
-p2 = sum(e-s+1 for s,e  in I)
-print(p1, p2)
+        l, _, r = L.partition('-')
+        xs.append([int(l), int(r)])
+xs.sort(); F = [xs[0]]
+for s,e in xs:
+    if s <= F[-1][1]:
+        F[-1][1] = max(F[-1][1], e)
+    else: F.append([s,e])
+print(sum(s<=i<=e for s,e in F for i in I),
+      sum(e-s+1 for s,e in F))
