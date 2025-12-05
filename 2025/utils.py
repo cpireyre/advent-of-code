@@ -9,3 +9,11 @@ def mooren(r,c):
             for i in (-1,0,1)
             for j in (-1,0,1)
             if i|j}
+
+def merge_intervals(xs):
+    xs.sort(); F = [xs[0]]
+    for s,e in xs:
+        if s <= F[-1][1]:
+            F[-1][1] = max(F[-1][1], e)
+        else: F.append([s,e])
+    return F
