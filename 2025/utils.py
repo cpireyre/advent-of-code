@@ -2,7 +2,7 @@ def extract(mat, pred):
     return {(r, c)
             for r in range(len(mat))
             for c in range(len(mat[0]))
-            if pred(r, c)}
+            if pred(mat[r][c])}
 
 def mooren(r,c):
     return {(r+i, c+j)
