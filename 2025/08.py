@@ -1,5 +1,5 @@
-import pprint
 from itertools import combinations
+from math import dist
 class DSU:
     def __init__(self):
         self.parent = {}
@@ -20,21 +20,15 @@ class DSU:
         self.parent[v] = u
         return True
 
-data = open("./input/08-in.txt").read().splitlines()
-dsu = DSU()
-J = []
-for line in data:
-    u = tuple(int(c) for c in line.split(','))
+dsu, J = DSU(), []
+for u in map(eval, open(0).read().splitlines()):
     dsu.find(u); J.append(u)
-pairs = list(combinations(J, 2))
-dist = lambda u,v: sum((u[i]-v[i])**2 for i in range(3))
-pairs.sort(key=lambda p: dist(*p))
+pairs = sorted(combinations(J, 2), key=lambda p: dist(*p))
 limit = 1000
 components = len(J)
 for u,v in pairs:
     components -= dsu.unite(u,v)
     if (limit := limit - 1) == 0:
-        circuits = [n for n in dsu.size.values()]
-        circuits.sort(reverse=True)
-        print(circuits[0] * circuits[1] * circuits[2])
+        circuits = sorted(n for n in dsu.size.values())
+        print(circuits[-1] * circuits[-2] * circuits[-3])
     if components == 1: print(u[0]*v[0]); break
