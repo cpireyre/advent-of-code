@@ -3,14 +3,14 @@ from functools import cache
 data = open("./input/11-in.txt").read().splitlines()
 G = defaultdict(set)
 for source, *sinks in map(str.split, data):
-    G[source[:-1]].update(sinks)
+    G[source[:-1]] = sinks
 
 @cache
 def paths(s,e):
     if s == e: return 1
     return sum(paths(v,e) for v in G[s])
 
-print(paths("you", "out"))
-print(paths("svr", "fft")
+print(paths("you", "out"),
+      paths("svr", "fft")
     * paths("fft", "dac")
     * paths("dac", "out"))
