@@ -1,24 +1,20 @@
-from collections import deque
+import scipy
 data = open("./input/10-in.txt").read().splitlines()
-
-def toggle(light, button):
-    res = light[:]
-    for i in button: res[i] ^= 1
-    return res
-
-p1 = 0
+p2 = 0
 for line in data:
-    diagram, *buttons, joltage = line.split()
-    buttons = list(map(eval, buttons))
-    diagram = tuple(map(lambda c: int(c == '#'), diagram[1:-1]))
-    light = [0] * len(diagram)
-    Q = deque([(light, 0)])
-    while True:
-        l, steps = Q.popleft()
-        if tuple(l) == diagram:
-            p1 += steps
-            break
-        for button in buttons:
-            if type(button) == int: button = tuple((button,)) # lol
-            Q.append((toggle(l, button), steps + 1))
-print(p1)
+    _, *buttons, b = line.split()
+    c = [1] * len(buttons)
+    b = eval(b[1:-1])
+    A = [[0 for _ in range(len(c))] for _ in range(len(b))]
+    for i, button in enumerate(buttons):
+        button = eval(button.replace(")", ",)"))
+        for x in button:
+            A[x][i] = 1
+    res = scipy.optimize.linprog(
+            c,
+            A_eq=A,
+            b_eq=b,
+            integrality=1
+            )
+    p2 += sum(res.x)
+print(int(p2))
