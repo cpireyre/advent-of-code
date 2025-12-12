@@ -1,7 +1,7 @@
 # cf. r/adventofcode/comments/1phywvn/comment/nt2hps9/
 
 from itertools import pairwise, combinations
-data = open("./input/09-in.txt").read().splitlines()
+data = open(0).read().splitlines()
 vertices = list(map(eval, data))
 edges = list(pairwise(vertices + [vertices[0]]))
 p1 = p2 = 0

@@ -1,4 +1,4 @@
-G = open("./input/07-in.txt").read().split()
+G = open(0).read().split()
 start = G[0].index('S')
 beams = {start}
 p1 = 0
