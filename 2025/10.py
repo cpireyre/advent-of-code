@@ -1,20 +1,30 @@
-import scipy
-data = open("./input/10-in.txt").read().splitlines()
-p2 = 0
-for line in data:
-    _, *buttons, b = line.split()
-    c = [1] * len(buttons)
-    b = eval(b[1:-1])
-    A = [[0 for _ in range(len(c))] for _ in range(len(b))]
+import functools as f, itertools as it, operator as op
+from scipy.optimize import linprog
+
+data = open(0).read().splitlines()
+p1 = p2 = 0
+
+for goal, *buttons, b in map(str.split, data):
+
+    b, c = eval(b[1:-1]), [1] * len(buttons)
+    A = [[0] * len(c) for _ in range(len(b))]
     for i, button in enumerate(buttons):
-        button = eval(button.replace(")", ",)"))
-        for x in button:
-            A[x][i] = 1
-    res = scipy.optimize.linprog(
-            c,
-            A_eq=A,
-            b_eq=b,
-            integrality=1
-            )
+        coefficients = map(int, button[1:-1].split(','))
+        for x in coefficients: A[x][i] = 1
+    res = linprog(c, A_eq=A, b_eq=b, integrality=1)
     p2 += sum(res.x)
-print(int(p2))
+
+    # Scary binary parsing
+    B = lambda x,y: (x << 1) | y
+    on = lambda c: c == '#'
+    goal = f.reduce(B, map(on, goal[1:-1]))
+    toggles = list(map(lambda xs: f.reduce(B, xs), zip(*A)))
+
+    for i in range(1, len(buttons)):
+        for switches in it.combinations(toggles, i):
+            light = f.reduce(op.xor, switches)
+            if light == goal: p1 += len(switches); break
+        else: continue
+        break
+
+print(p1, int(p2))
